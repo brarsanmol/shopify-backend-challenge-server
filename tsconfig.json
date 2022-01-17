@@ -12,9 +12,8 @@
     "outDir": "build",
     "baseUrl": ".",
     "paths": {
-      "@root": ["./*"],
-      "@app": ["src/*"],
-      "@test": ["test/*"]
+      "@app/*": ["src/*"],
+      "@test/*": ["test/*"]
     }
   },
   "include": ["src/**/*"],
