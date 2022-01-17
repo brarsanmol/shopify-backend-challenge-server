@@ -1,5 +1,10 @@
-import express, { Application } from "express"
+import "reflect-metadata"
+import { container } from "tsyringe"
+import { Application } from "@app/application"
 
-const application: Application = express()
+function bootstrap() {
+  const application: Application = container.resolve(Application)
+  application.listen()
+}
 
-application.listen(3000, () => console.log("Listening on port 3000..."))
+bootstrap()
