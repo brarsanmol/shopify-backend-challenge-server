@@ -4,6 +4,7 @@ import { join } from "path"
 import { autoInjectable, singleton } from "tsyringe"
 import cors from "cors"
 import { Server } from "http"
+import { createConnection } from "typeorm"
 
 @autoInjectable()
 @singleton()
@@ -16,6 +17,7 @@ export class Application {
     this.useEnvironmentFile()
     this.useCors()
     this.useMiddleware()
+    this.useDatabase()
   }
 
   private useMiddleware(): void {
@@ -36,6 +38,10 @@ export class Application {
     })
 
     if (result.error) throw result.error
+  }
+
+  private async useDatabase(): Promise<void> {
+    await createConnection()
   }
 
   public getExpressApplication(): ExpressApplication {
