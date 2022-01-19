@@ -53,6 +53,8 @@
   },
   "dependencies": {
     "@decorators/express": "^2.6.0",
+    "class-transformer": "^0.5.1",
+    "class-validator": "^0.13.2",
     "cors": "^2.8.5",
     "dotenv": "^14.1.0",
     "express": "^4.17.2",
