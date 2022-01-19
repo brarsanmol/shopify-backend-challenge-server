@@ -5,9 +5,11 @@ import { IItemService } from "./interfaces/item.service.interface"
 
 @singleton()
 export class ItemService implements IItemService {
-  constructor(
-    private readonly itemRepository: Repository<Item> = getRepository(Item)
-  ) {}
+  private readonly itemRepository: Repository<Item>
+
+  constructor() {
+    this.itemRepository = getRepository(Item)
+  }
 
   public async findByIdentifier(identifier: number): Promise<Item | undefined> {
     return await this.itemRepository.findOne(identifier)
