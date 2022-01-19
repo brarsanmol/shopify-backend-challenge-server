@@ -1,4 +1,5 @@
 import { Item } from "@app/entities/item.entity"
+import { parse } from "json2csv"
 import { singleton } from "tsyringe"
 import { DeleteResult, getRepository, Repository, UpdateResult } from "typeorm"
 import { IItemService } from "./interfaces/item.service.interface"
@@ -28,5 +29,13 @@ export class ItemService implements IItemService {
 
   public async delete(identifier: number): Promise<DeleteResult> {
     return await this.itemRepository.delete(identifier)
+  }
+
+  public async toCSV(identifiers?: Array<number>): Promise<string> {
+    return await parse(
+      identifiers
+        ? await this.itemRepository.findByIds(identifiers)
+        : await this.itemRepository.find()
+    )
   }
 }

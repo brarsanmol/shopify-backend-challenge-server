@@ -9,4 +9,6 @@ export interface IItemService {
   save(item: Item): Promise<Item>
 
   delete(identifier: number): Promise<DeleteResult>
+
+  toCSV(identifiers?: Array<number>): Promise<string>
 }
