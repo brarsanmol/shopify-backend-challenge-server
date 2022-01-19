@@ -1,4 +1,5 @@
 import { Item } from "@app/entities/item.entity"
+import { BodyValidator } from "@app/middlewares/body-validator.middleware"
 import { IItemService } from "@app/services/interfaces/item.service.interface"
 import {
   Body,
@@ -35,7 +36,7 @@ export class ItemController {
     item ? response.status(200).send(item) : response.status(404).send()
   }
 
-  @Post("/")
+  @Post("/", [BodyValidator(Item)])
   public async create(
     @Body() item: Item,
     @Response() response: ExpressResponse
@@ -45,7 +46,7 @@ export class ItemController {
     item ? response.status(200).send(result) : response.status(500).send()
   }
 
-  @Patch("/")
+  @Patch("/", [BodyValidator(Item)])
   public async update(
     @Params("identifier") identifier: number,
     @Body() item: Partial<Item>,
