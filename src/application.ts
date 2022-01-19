@@ -1,12 +1,13 @@
 import { config, DotenvConfigOutput } from "dotenv"
 import express, { Application as ExpressApplication, json } from "express"
 import { join } from "path"
-import { autoInjectable, singleton } from "tsyringe"
+import { autoInjectable, container, singleton } from "tsyringe"
 import cors from "cors"
 import { Server } from "http"
-import { createConnection } from "typeorm"
-import { readdir, readFile, readFileSync } from "fs"
+import { createConnection, getRepository } from "typeorm"
 import { attachControllerInstances } from "@decorators/express"
+import { ItemController } from "./controllers/item.controller"
+import { ItemService } from "./services/item.service"
 
 @autoInjectable()
 @singleton()
@@ -16,10 +17,15 @@ export class Application {
   constructor() {
     this.express = express()
 
+    this.initializeAsync()
+  }
+
+  private async initializeAsync() {
     this.useEnvironmentFile()
+    await this.useDatabase()
     this.useCors()
     this.useMiddleware()
-    this.useDatabase()
+    this.useServices()
     this.useControllers()
   }
 
@@ -48,7 +54,11 @@ export class Application {
   }
 
   public useControllers(): void {
-    attachControllerInstances(this.express, [])
+    attachControllerInstances(this.express, [container.resolve(ItemController)])
+  }
+
+  public useServices(): void {
+    container.register("ItemService", { useClass: ItemService })
   }
 
   public getExpressApplication(): ExpressApplication {
