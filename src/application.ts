@@ -5,6 +5,8 @@ import { autoInjectable, singleton } from "tsyringe"
 import cors from "cors"
 import { Server } from "http"
 import { createConnection } from "typeorm"
+import { readdir, readFile, readFileSync } from "fs"
+import { attachControllerInstances } from "@decorators/express"
 
 @autoInjectable()
 @singleton()
@@ -18,6 +20,7 @@ export class Application {
     this.useCors()
     this.useMiddleware()
     this.useDatabase()
+    this.useControllers()
   }
 
   private useMiddleware(): void {
@@ -42,6 +45,10 @@ export class Application {
 
   private async useDatabase(): Promise<void> {
     await createConnection()
+  }
+
+  public useControllers(): void {
+    attachControllerInstances(this.express, [])
   }
 
   public getExpressApplication(): ExpressApplication {
