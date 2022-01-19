@@ -24,6 +24,11 @@ export class ItemController {
     private readonly itemService: IItemService
   ) {}
 
+  @Get("/")
+  public async getAll(@Response() response: ExpressResponse) {
+    response.status(200).send(await this.itemService.find())
+  }
+
   @Get("/:identifier")
   public async getByIdentifier(
     @Params("identififer") identifier: number,
@@ -34,6 +39,14 @@ export class ItemController {
     )
 
     item ? response.status(200).send(item) : response.status(404).send()
+  }
+
+  @Get("/csv")
+  public async getCSV(
+    @Body("identifiers") identifiers: Array<number>,
+    @Response() response: ExpressResponse
+  ) {
+    response.status(200).send(await this.itemService.toCSV(identifiers))
   }
 
   @Post("/", [BodyValidator(Item)])
