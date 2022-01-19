@@ -12,6 +12,14 @@ export class ItemService implements IItemService {
     this.itemRepository = getRepository(Item)
   }
 
+  public async find(
+    identifiers?: Array<number>
+  ): Promise<Array<Item> | undefined> {
+    return identifiers
+      ? await this.itemRepository.findByIds(identifiers)
+      : await this.itemRepository.find()
+  }
+
   public async findByIdentifier(identifier: number): Promise<Item | undefined> {
     return await this.itemRepository.findOne(identifier)
   }
@@ -32,10 +40,6 @@ export class ItemService implements IItemService {
   }
 
   public async toCSV(identifiers?: Array<number>): Promise<string> {
-    return await parse(
-      identifiers
-        ? await this.itemRepository.findByIds(identifiers)
-        : await this.itemRepository.find()
-    )
+    return await parse(this.find(identifiers))
   }
 }
