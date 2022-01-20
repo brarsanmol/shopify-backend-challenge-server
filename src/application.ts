@@ -36,7 +36,7 @@ export class Application {
   private useCors(): void {
     this.express.use(
       cors({
-        origin: [`https://${process.env.CLIENT_ADDRESS}`]
+        origin: [`${process.env.CLIENT_ADDRESS}`]
       })
     )
   }
