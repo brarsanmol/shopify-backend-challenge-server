@@ -1,5 +1,5 @@
 import { Item } from "@app/entities/item.entity"
-import { parse } from "json2csv"
+import { parseAsync } from "json2csv"
 import { singleton } from "tsyringe"
 import { DeleteResult, getRepository, Repository, UpdateResult } from "typeorm"
 import { IItemService } from "./interfaces/item.service.interface"
@@ -40,6 +40,6 @@ export class ItemService implements IItemService {
   }
 
   public async toCSV(identifiers?: Array<number>): Promise<string> {
-    return await parse(this.find(identifiers))
+    return await parseAsync(await this.find(identifiers))
   }
 }
