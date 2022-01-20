@@ -46,7 +46,11 @@ export class ItemController {
     @Body("identifiers") identifiers: Array<number>,
     @Response() response: ExpressResponse
   ) {
-    response.status(200).send(await this.itemService.toCSV(identifiers))
+    response
+      .status(200)
+      .header("Content-Type", "text/csv")
+      .attachment("items.csv")
+      .send(await this.itemService.toCSV(identifiers))
   }
 
   @Post("/", [BodyValidator(Item)])
@@ -59,7 +63,7 @@ export class ItemController {
     item ? response.status(200).send(result) : response.status(500).send()
   }
 
-  @Patch("/", [BodyValidator(Item)])
+  @Patch("/:identifier", [BodyValidator(Item)])
   public async update(
     @Params("identifier") identifier: number,
     @Body() item: Partial<Item>,
