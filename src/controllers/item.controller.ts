@@ -41,7 +41,7 @@ export class ItemController {
     item ? response.status(200).send(item) : response.status(404).send()
   }
 
-  @Get("/csv")
+  @Get("/export/csv")
   public async getCSV(
     @Body("identifiers") identifiers: Array<number>,
     @Response() response: ExpressResponse
@@ -76,7 +76,7 @@ export class ItemController {
       : response.status(404).send()
   }
 
-  @Delete("/")
+  @Delete("/:identifier")
   public async delete(
     @Params("identifier") identifier: number,
     @Response() response: ExpressResponse
