@@ -1,6 +1,6 @@
 import { Middleware } from "@decorators/express"
 import { plainToClass } from "class-transformer"
-import { validate } from "class-validator"
+import { validateOrReject } from "class-validator"
 import { Request, Response, NextFunction } from "express"
 import { ParamsDictionary } from "express-serve-static-core"
 import { ParsedQs } from "qs"
@@ -19,11 +19,14 @@ export function BodyValidator(entity: any): any {
       response: Response<unknown, Record<string, unknown>>,
       next: NextFunction
     ): Promise<void> {
-      await validate(plainToClass(entity, request.body)).catch(errors =>
-        response.status(422).send(errors)
-      )
-
-      return next()
+      await validateOrReject(plainToClass(entity, request.body))
+        .then(() => next())
+        .catch(errors => {
+          response.status(422).send(
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            errors.flatMap((error: any) => Object.values(error["constraints"]))
+          )
+        })
     }
   }
   return new BodyValidatorMiddleware()
